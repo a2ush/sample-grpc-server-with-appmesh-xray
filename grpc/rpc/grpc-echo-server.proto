@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package rpc;
+option go_package = "./;rpc";
+
+service TimeManage {
+    rpc ConvertTime(ClientRequest) returns (ServerResponse) {}
+}
+
+message Timezone {
+    enum Format {
+        Unknown = 0;
+        UTC = 1;
+        PST = 2;
+        JST = 3;
+    }
+}
+message ClientRequest {
+    Timezone.Format timezone_format = 1;
+}
+
+message ServerResponse {
+    string convert_time = 1;    
+}
