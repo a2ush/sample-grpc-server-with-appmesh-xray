@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-client
+  namespace: grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc-client
+  template:
+    metadata:
+      labels:
+        app: grpc-client
+    spec:
+      containers:
+      - name: client
+        image: <AWS-ACCOUNT-ID>.dkr.ecr.<REGION>.amazonaws.com/sample-grpc-client
+        command: [./client]
+        ports:
+        - containerPort: 8080
+        env: 
+        - name: SERVER_PATH
+          value: "grpc-server"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-client
+  namespace: grpc
+spec:
+  selector:
+    app: grpc-client
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080

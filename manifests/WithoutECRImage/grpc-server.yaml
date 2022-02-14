@@ -1,30 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grpc_client
+  name: grpc-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grpc_client
+      app: grpc-server
   template:
     metadata:
       labels:
-        app: grpc_client
+        app: grpc-server
     spec:
       initContainers:
       - name: go-build
         image: golang:1.17.2
         command: ["/bin/sh", "-c"]
         args:
-        - git clone https://github.com/a2ush/sample-grpc-server-with-appmesh-xray.git && cd sample-grpc-server-with-appmesh-xray/grpc/client && go build -o grpc-client && mv grpc-client /mnt/
+        - git clone https://github.com/a2ush/sample-grpc-server-with-appmesh-xray.git && cd sample-grpc-server-with-appmesh-xray/grpc && go build -o grpc-server server/server.go && mv grpc-server /mnt/
         volumeMounts:
         - name: share-volume
           mountPath: /mnt
       containers:
       - name: server
         image: amazonlinux:2
-        command: ["/mnt/grpc-client"]
+        command: ["/mnt/grpc-server"]
         ports:
         - containerPort: 8080
         volumeMounts:
@@ -37,11 +37,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: grpc_client
+  name: grpc-server
 spec:
   selector:
-    app: grpc_client
+    app: grpc-server
   ports:
-  - port: 8080
+  - port: 50051
     protocol: TCP
-    targetPort: 8080
+    targetPort: 50051

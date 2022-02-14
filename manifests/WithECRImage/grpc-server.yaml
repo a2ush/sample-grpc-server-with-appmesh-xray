@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-server
+  namespace: grpc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc-server
+  template:
+    metadata:
+      labels:
+        app: grpc-server
+    spec:
+      containers:
+      - name: server
+        image: <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/sample-grpc-server
+        command: [./server]
+        ports:
+        - containerPort: 50051
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-server
+  namespace: grpc
+spec:
+  selector:
+    app: grpc-server
+  ports:
+  - port: 50051
+    protocol: TCP
+    targetPort: 50051
