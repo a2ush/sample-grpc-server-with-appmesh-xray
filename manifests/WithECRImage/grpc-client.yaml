@@ -21,7 +21,7 @@ spec:
         - containerPort: 8080
         env: 
         - name: SERVER_PATH
-          value: "grpc-server"
+          value: "grpc-server.grpc.svc.cluster.local"
 ---
 apiVersion: v1
 kind: Service
@@ -32,6 +32,6 @@ spec:
   selector:
     app: grpc-client
   ports:
-  - port: 80
+  - port: 8080
     protocol: TCP
     targetPort: 8080
