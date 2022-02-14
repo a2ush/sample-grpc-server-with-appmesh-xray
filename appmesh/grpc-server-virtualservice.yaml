@@ -1,0 +1,11 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: grpc-server-virtualservice
+  namespace: grpc
+spec:
+  awsName: grpc-server.grpc.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: grpc-server-virtualnode

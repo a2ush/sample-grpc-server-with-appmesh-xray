@@ -1,0 +1,20 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: grpc-client-virtualnode
+  namespace: grpc
+spec:
+  podSelector:
+    matchLabels:
+      app: grpc-client
+  listeners:
+    - portMapping:
+        port: 8080
+        protocol: tcp
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: grpc-server-virtualservice
+  serviceDiscovery:
+    dns:
+      hostname: grpc-client.grpc.svc.cluster.local
