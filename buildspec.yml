@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - yum --showduplicates search golang
+      - yum install golang1.17.2 -y
+
+  pre_build:
+    commands:
+      - ls -al
+      - go build -o containers/grpc-server gpc/server/server.go
+      - go build -o containers/grpc-client gpc/client/client.go
+
+  build:
+    commands:
