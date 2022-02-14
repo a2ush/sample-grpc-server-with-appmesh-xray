@@ -58,7 +58,8 @@ func gRPCRequest(timezone string) *rpc.ServerResponse {
 		grpc.WithBlock(),
 	)
 	if err != nil {
-		log.Fatal("Connection failed.")
+		// log.Fatal("Connection failed.")
+		log.Println("Connection failed.")
 		return nil
 	}
 	defer conn.Close()
@@ -88,8 +89,11 @@ func gRPCRequest(timezone string) *rpc.ServerResponse {
 	}
 
 	result, err := client.ConvertTime(ctx, &req)
+	log.Println(result)
+	log.Println(err)
 	if err != nil {
-		log.Fatal("Request failed.")
+		// log.Fatal("Request failed.")
+		log.Println("Request failed.")
 		return nil
 	}
 
