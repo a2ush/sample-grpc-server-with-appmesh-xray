@@ -3,14 +3,18 @@ version: 0.2
 phases:
   install:
     commands:
-      - yum --showduplicates search golang
-      - yum install golang1.17.2 -y
+      - wget https://go.dev/dl/go1.17.7.linux-amd64.tar.gz --quiet
+      - rm -rf /usr/local/go && tar -C /usr/local -xzf go1.17.7.linux-amd64.tar.gz > /dev/null
+      - export PATH=/usr/local/go/bin:$PATH
+      - go version      
 
   pre_build:
     commands:
-      - ls -al
-      - go build -o containers/grpc-server gpc/server/server.go
-      - go build -o containers/grpc-client gpc/client/client.go
+      - cd grpc
+      - go build -o containers/grpc-server server/server.go
+      - go build -o containers/grpc-client client/client.go
 
   build:
     commands:
+      - yum install tree -y
+      - tree ./
