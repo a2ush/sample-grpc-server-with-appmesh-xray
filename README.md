@@ -31,3 +31,26 @@ $ cd sample-grpc-server-with-appmesh-xray
 
 $ kubectl apply -f manifests/WithoutECRImage/
 ```
+
+4. Deploy CR related to App Mesh
+```
+$ kubectl apply -f appmesh/
+```
+
+5. Inject envoy & x-ray daemon container 
+```
+$ kubectl restart deploy -n grpc
+```
+
+6. Test
+```
+$ kubectl -n grpc run test --image=amazonlinux:2 --annotations="appmesh.k8s.aws/sidecarInjectorWebhook=disabled" -- sleep 3600
+$ kn exec -it al2 -- bash
+bash-4.2# 
+
+$ kn exec -it al2 -- bash
+bash-4.2# curl grpc-client:8080
+{"convert_time":"2022-02-17T14:41:17Z"}
+bash-4.2# curl grpc-client:8080/jst
+{"convert_time":"2022-02-17T23:41:24+09:00"}
+```
