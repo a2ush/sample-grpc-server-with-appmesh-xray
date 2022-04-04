@@ -66,10 +66,10 @@ func (s *TimeManageServer) ConvertTime(
 	req *rpc.ClientRequest,
 ) (*rpc.ServerResponse, error) {
 
-	timezone, _ := time.LoadLocation("Europe/London")
+	timezone, _ := time.LoadLocation("UTC")
 	switch req.TimezoneFormat {
 	case rpc.Timezone_UTC:
-		timezone, _ = time.LoadLocation("Europe/London")
+		timezone, _ = time.LoadLocation("UTC")
 	case rpc.Timezone_PST:
 		timezone, _ = time.LoadLocation("America/New_York")
 	case rpc.Timezone_JST:
