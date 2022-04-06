@@ -1,4 +1,8 @@
 
+## What is this application?
+
+This application provides the time based on timezone with gRPC.
+
 ## Deploy all resources
 
 1. Create EKS cluster
@@ -43,6 +47,33 @@ $ kubectl rollout restart deploy -n grpc
 ```
 
 6. Test
+
+gRPC
+```
+$ kubectl run grpc-cli --image=<Container image with grpc_cli> -n grpc --annotations="appmesh.k8s.aws/sidecarInjectorWebhook=disabled"
+pod/grpc-cli created
+$ kubectl exec -it grpc-cli -n grpc -- bash
+
+# grpc_cli ls grpc-server:50051 -l
+filename: reflection/grpc_reflection_v1alpha/reflection.proto
+package: grpc.reflection.v1alpha;
+service ServerReflection {
+  rpc ServerReflectionInfo(stream grpc.reflection.v1alpha.ServerReflectionRequest) returns (stream grpc.reflection.v1alpha.ServerReflectionResponse) {}
+}
+
+filename: grpc-echo-server.proto
+package: rpc;
+service TimeManage {
+  rpc ConvertTime(rpc.ClientRequest) returns (rpc.ServerResponse) {}
+}
+
+# grpc_cli type grpc-server:50051 rpc.ClientRequest
+message ClientRequest {
+  .rpc.Timezone.Format timezone_format = 1[json_name = "timezoneFormat"];
+}
+```
+
+Send request to grpc-client
 ```
 $ kubectl -n grpc run test --image=amazonlinux:2 --annotations="appmesh.k8s.aws/sidecarInjectorWebhook=disabled" -- sleep 3600
 $ kubectl -n grpc exec -it test -- bash
