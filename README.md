@@ -52,3 +52,7 @@ bash-4.2# curl grpc-client:8080
 bash-4.2# curl grpc-client:8080/jst
 {"convert_time":"2022-02-17T23:41:24+09:00"}
 ```
+
+X-Ray Console
+
+![images](images/x-ray.png)
