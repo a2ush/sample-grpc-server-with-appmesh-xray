@@ -1,8 +1,8 @@
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
-  namespace: grpc
   name: grpc-server-virtualnode
+  namespace: grpc
 spec:
   podSelector:
     matchLabels:
@@ -11,6 +11,10 @@ spec:
     - portMapping:
         port: 50051
         protocol: grpc
+  backends:
+    - virtualService:
+        virtualServiceRef:
+          name: redis-server-virtualservice        
   serviceDiscovery:
     dns:
       hostname: grpc-server.grpc.svc.cluster.local
