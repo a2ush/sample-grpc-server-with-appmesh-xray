@@ -10,7 +10,7 @@ spec:
   listeners:
     - portMapping:
         port: 6379
-        protocol: grpc
+        protocol: tcp
   serviceDiscovery:
     dns:
       hostname: redis-server.grpc.svc.cluster.local
