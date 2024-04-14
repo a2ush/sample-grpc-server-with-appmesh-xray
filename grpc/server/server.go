@@ -85,7 +85,7 @@ func (s *TimeManageServer) ConvertTime(
 
 	// record the result to redis
 	client := redis.NewClient(&redis.Options{
-		Addr: "redis-server.redis.svc.cluster.local:6379",
+		Addr: "redis-server.grpc.svc.cluster.local:6379",
 	})
 	counter++
 	err := client.Set(strconv.Itoa(counter), convert_time, 0).Err()

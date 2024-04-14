@@ -1,0 +1,11 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: redis-server-virtualservice
+  namespace: grpc
+spec:
+  awsName: redis-server.grpc.svc.cluster.local
+  provider:
+    virtualNode:
+      virtualNodeRef:
+        name: redis-server-virtualnode
