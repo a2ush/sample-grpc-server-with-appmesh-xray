@@ -23,7 +23,7 @@ spec:
         image: golang:1.17.2
         command: ["/bin/sh", "-c"]
         args:
-        - git clone https://github.com/a2ush/sample-grpc-server-with-appmesh-xray.git && cd sample-grpc-server-with-appmesh-xray/grpc && go build -o grpc-server server/server.go && mv grpc-server /mnt/
+        - git clone https://github.com/a2ush/sample-grpc-server-with-appmesh-xray.git && cd sample-grpc-server-with-appmesh-xray/grpc && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o grpc-server server/server.go && mv grpc-server /mnt/
         volumeMounts:
         - name: share-volume
           mountPath: /mnt
