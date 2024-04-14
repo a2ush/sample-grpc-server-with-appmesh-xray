@@ -88,7 +88,7 @@ func (s *TimeManageServer) ConvertTime(
 		Addr: "redis-server.grpc.svc.cluster.local:6379",
 	})
 	counter++
-	err := client.Set(strconv.Itoa(counter), convert_time, 0).Err()
+	err := client.Set(strconv.Itoa(counter), convert_time.Format(time.RFC3339), 0).Err()
 	if err != nil {
 		panic(err)
 	}

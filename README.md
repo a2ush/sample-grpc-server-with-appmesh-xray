@@ -46,9 +46,30 @@ $ kubectl apply -f appmesh/
 $ kubectl rollout restart deploy -n grpc
 ```
 
+check
+```
+$ kubectl get po -A
+NAMESPACE        NAME                                 READY   STATUS    RESTARTS   AGE
+appmesh-system   appmesh-controller-d9d44fbf9-j98rr   1/1     Running   0          106m
+grpc             grpc-client-78c58b6867-64852         3/3     Running   0          3m13s
+grpc             grpc-server-849bcc5987-kh9fm         3/3     Running   0          3m13s
+grpc             redis-server-c948c98bc-rz5vc         3/3     Running   0          3m13s
+```
+
 6. Test
 
-gRPC
+Send request to grpc-client
+```
+$ kubectl -n grpc run test --image=amazonlinux:2 --annotations="appmesh.k8s.aws/sidecarInjectorWebhook=disabled" -- sleep 3600
+$ kubectl -n grpc exec -it test -- bash
+bash-4.2# 
+bash-4.2# curl grpc-client:8080
+{"convert_time":"2022-02-17T14:41:17Z"}
+bash-4.2# curl grpc-client:8080/jst
+{"convert_time":"2022-02-17T23:41:24+09:00"}
+```
+
+gRPC test
 ```
 $ kubectl run grpc-cli --image=<Container image with grpc_cli> -n grpc --annotations="appmesh.k8s.aws/sidecarInjectorWebhook=disabled"
 pod/grpc-cli created
@@ -71,17 +92,6 @@ service TimeManage {
 message ClientRequest {
   .rpc.Timezone.Format timezone_format = 1[json_name = "timezoneFormat"];
 }
-```
-
-Send request to grpc-client
-```
-$ kubectl -n grpc run test --image=amazonlinux:2 --annotations="appmesh.k8s.aws/sidecarInjectorWebhook=disabled" -- sleep 3600
-$ kubectl -n grpc exec -it test -- bash
-bash-4.2# 
-bash-4.2# curl grpc-client:8080
-{"convert_time":"2022-02-17T14:41:17Z"}
-bash-4.2# curl grpc-client:8080/jst
-{"convert_time":"2022-02-17T23:41:24+09:00"}
 ```
 
 X-Ray Console
