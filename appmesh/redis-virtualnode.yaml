@@ -9,7 +9,7 @@ spec:
       app: redis-server
   listeners:
     - portMapping:
-        port: 50051
+        port: 6379
         protocol: grpc
   serviceDiscovery:
     dns:
