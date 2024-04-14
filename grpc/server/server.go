@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -87,7 +88,7 @@ func (s *TimeManageServer) ConvertTime(
 		Addr: "redis-server.redis.svc.cluster.local:6379",
 	})
 	counter++
-	err := client.Set(string(counter), convert_time, 0).Err()
+	err := client.Set(strconv.Itoa(counter), convert_time, 0).Err()
 	if err != nil {
 		panic(err)
 	}
