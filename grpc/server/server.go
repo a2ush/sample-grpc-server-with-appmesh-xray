@@ -16,9 +16,12 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	"github.com/a2ush/sample-grpc-server-with-appmesh-xray/rpc"
+	"github.com/go-redis/redis"
 )
 
 type TimeManageServer struct{}
+
+var counter int
 
 func main() {
 	port := 50051
@@ -76,10 +79,20 @@ func (s *TimeManageServer) ConvertTime(
 		timezone, _ = time.LoadLocation("Asia/Tokyo")
 	}
 
-	converte_time := time.Now().In(timezone)
-	log.Printf("req.TimezoneFormat: %v, return : %v", req.TimezoneFormat, converte_time.Format(time.RFC3339))
+	convert_time := time.Now().In(timezone)
+	log.Printf("req.TimezoneFormat: %v, return : %v", req.TimezoneFormat, convert_time.Format(time.RFC3339))
+
+	// record the result to redis
+	client := redis.NewClient(&redis.Options{
+		Addr: "redis-server.redis.svc.cluster.local:6379",
+	})
+	counter++
+	err := client.Set(string(counter), convert_time, 0).Err()
+	if err != nil {
+		panic(err)
+	}
 
 	return &rpc.ServerResponse{
-		ConvertTime: string(converte_time.Format(time.RFC3339)),
+		ConvertTime: string(convert_time.Format(time.RFC3339)),
 	}, nil
 }
